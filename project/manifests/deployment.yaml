@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-server-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-server
+  template:
+    metadata:
+      labels:
+        app: project-server
+    spec:
+      volumes:
+        - name: shared-files
+          persistentVolumeClaim:
+            claimName: shared-claim
+      containers:
+        - name: project-server
+          image: daraku/project-server:v1.11
+          volumeMounts:
+            - name: shared-files
+              mountPath: /files
