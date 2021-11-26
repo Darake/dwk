@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: dwk-other
   name: ping-pong-dep
 spec:
   replicas: 1
@@ -12,13 +13,9 @@ spec:
       labels:
         app: ping-pong
     spec:
-      volumes:
-        - name: shared-files
-          persistentVolumeClaim:
-            claimName: shared-claim
       containers:
         - name: ping-pong
-          image: daraku/ping-pong:v1.5
-          volumeMounts:
-            - name: shared-files
-              mountPath: /files
+          image: daraku/ping-pong:v1.11
+          envFrom:
+            - secretRef:
+                name: ping-pong-secrets

@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "project"
+		},
+		{
+			"path": "log-output"
+		},
+		{
+			"path": "ping-pong"
+		},
+		{
+			"path": "manifests"
+		}
+	]
+}

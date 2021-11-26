@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: dwk-other
   name: log-output-svc
 spec:
   type: ClusterIP

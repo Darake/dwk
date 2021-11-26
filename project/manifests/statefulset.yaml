@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: dwk-project
+  name: project-db-svc
+  labels:
+    app: project-db
+spec:
+  ports:
+  - port: 5432
+    name: web
+  clusterIP: None
+  selector:
+    app: project-db
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: dwk-project
+  name: project-db-ss
+spec:
+  serviceName: project-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-db
+  template:
+    metadata:
+      labels:
+        app: project-db
+    spec:
+      containers:
+        - name: project-db
+          image: postgres:13.0
+          ports:
+            - name: project-db
+              containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: project-secrets
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi

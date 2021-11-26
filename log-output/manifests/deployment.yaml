@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: dwk-other
   name: log-output-dep
 spec:
   replicas: 1
@@ -23,7 +24,13 @@ spec:
             - name: shared-files
               mountPath: /files
         - name: log-reader
-          image: daraku/log-reader:v1.5
+          image: daraku/log-reader:v1.10
           volumeMounts:
             - name: shared-files
               mountPath: /files
+          env:
+            - name: MESSAGE
+              valueFrom:
+                configMapKeyRef:
+                  name: log-output-configmap
+                  key: message

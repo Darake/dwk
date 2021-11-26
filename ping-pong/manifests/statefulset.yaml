@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: dwk-other
+  name: ping-pong-db-svc
+  labels:
+    app: ping-pong-db
+spec:
+  ports:
+  - port: 5432
+    name: web
+  clusterIP: None
+  selector:
+    app: ping-pong-db
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: dwk-other
+  name: ping-pong-db-ss
+spec:
+  serviceName: ping-pong-db
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-pong-db
+  template:
+    metadata:
+      labels:
+        app: ping-pong-db
+    spec:
+      containers:
+        - name: ping-pong-db
+          image: postgres:13.0
+          ports:
+            - name: ping-pong-db
+              containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: ping-pong-secrets
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi

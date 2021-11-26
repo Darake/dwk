@@ -1,4 +1,4 @@
-module kube/ping-pong
+module kube/project-client
 
 go 1.17
 

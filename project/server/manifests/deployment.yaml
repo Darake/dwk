@@ -1,6 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: dwk-project
   name: project-server-dep
 spec:
   replicas: 1
@@ -18,7 +19,10 @@ spec:
             claimName: shared-claim
       containers:
         - name: project-server
-          image: daraku/project-server:v1.11
+          image: daraku/project-server:v1.19
+          envFrom:
+            - secretRef:
+                name: project-secrets
           volumeMounts:
             - name: shared-files
               mountPath: /files

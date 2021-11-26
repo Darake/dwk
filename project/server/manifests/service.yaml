@@ -1,12 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: dwk-project
   name: project-server-svc
 spec:
   type: ClusterIP
   selector:
-    app: project-server # This is the app as declared in the deployment.
+    app: project-server
   ports:
     - port: 1234
       targetPort: 8090
       protocol: TCP
+      name: http

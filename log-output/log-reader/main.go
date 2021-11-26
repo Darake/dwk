@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 )
@@ -13,14 +14,14 @@ func latestLogHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 	}
 
-	pongCount, err := os.ReadFile("/files/pongcounter.txt")
+	pongBody, _ := http.Get("http://ping-pong-svc/pingpong/count")
+	pongData, _ := io.ReadAll(pongBody.Body)
+	pongCount := string(pongData)
 
-	if err != nil {
-		fmt.Println(err)
-	}
+	fmt.Println("Env: " + os.Getenv("MESSAGE"))
 
-	output := string(hash) + "\n" + "Ping / Pongs: %d"
-	fmt.Fprintf(w, output, int(pongCount[0]))
+	output := os.Getenv("MESSAGE") + "\n" + string(hash) + "\n" + "Ping / Pongs: " + pongCount
+	fmt.Fprint(w, output)
 }
 
 func main() {
