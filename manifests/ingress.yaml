@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: dwk-other
-  name: log-output-ingress
+  name: log-output-ing
 spec:
   rules:
   - http:

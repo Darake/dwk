@@ -39,6 +39,15 @@ func countHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprint(w, count)
 }
 
+func defaultHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 func initDB() {
 	url := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable",
 		"postgres",
@@ -66,6 +75,7 @@ func main() {
 
 	http.HandleFunc("/pingpong/count", countHandler)
 	http.HandleFunc("/pingpong", pongHandler)
+	http.HandleFunc("/", defaultHandler)
 
 	http.ListenAndServe(":5011", nil)
 }

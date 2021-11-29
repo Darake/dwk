@@ -4,11 +4,10 @@ metadata:
   namespace: dwk-other
   name: ping-pong-svc
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: ping-pong
   ports:
-    - name: http
-      port: 80
+    - port: 80
       protocol: TCP
       targetPort: 5011

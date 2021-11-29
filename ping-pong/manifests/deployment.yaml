@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: daraku/ping-pong:v1.11
+          image: daraku/ping-pong:v1.12
           envFrom:
             - secretRef:
                 name: ping-pong-secrets
