@@ -101,6 +101,15 @@ func todosHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func defaultHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Path != "/" {
+		http.NotFound(w, r)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 func initDB() {
 	url := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable",
 		"postgres",
@@ -125,6 +134,7 @@ func main() {
 
 	http.HandleFunc("/api/daily-image", imageHandler)
 	http.HandleFunc("/api/todos", todosHandler)
+	http.HandleFunc("/", defaultHandler)
 
 	port := "8090"
 	log.Printf("Server starting in port %s", port)
