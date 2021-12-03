@@ -7,7 +7,7 @@ resources:
 - client/manifests/service.yaml
 - manifests/cronjob.yaml
 - manifests/ingress.yaml
-- manifests/persistenvolumeclaim.yaml
+- manifests/persistentvolumeclaim.yaml
 - manifests/statefulset.yaml
 images:
 - name: gcr.io/PROJECT_ID/CLIENT_IMAGE
