@@ -16,6 +16,10 @@ spec:
       containers:
         - name: ping-pong
           image: daraku/ping-pong:v1.12
+          resources:
+            limits:
+              cpu: "50m"
+              memory: "50Mi"
           envFrom:
             - secretRef:
                 name: ping-pong-secrets
