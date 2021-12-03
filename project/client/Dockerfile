@@ -9,7 +9,6 @@ WORKDIR /app
 
 COPY go.mod ./
 COPY *.go ./
-ADD build ./build
 
 RUN go build -o /go-app
 
