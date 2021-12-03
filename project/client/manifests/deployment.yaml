@@ -16,3 +16,7 @@ spec:
       containers:
         - name: project-client
           image: gcr.io/PROJECT_ID/CLIENT_IMAGE
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "100Mi"
