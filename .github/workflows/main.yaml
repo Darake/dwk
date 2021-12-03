@@ -30,12 +30,12 @@ jobs:
       run: |-
         docker build \
           --tag "gcr.io/$PROJECT_ID/$SERVER_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
-          project/server/Dockerfile
+          project/server/
     - name: Build client
       run: |-
         docker build \
           --tag "gcr.io/$PROJECT_ID/$IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
-          project/client/Dockerfile
+          project/client/
     - name: Publish server
       run: |-
         docker push "gcr.io/$PROJECT_ID/$SERVER_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
@@ -47,12 +47,12 @@ jobs:
     - name: Deploy server
       run: |-
         kustomize edit set image gcr.io/PROJECT_ID/SERVER_IMAGE=gcr.io/$PROJECT_ID/$SERVER_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
-        kustomize build server/kustomization.yaml | kubectl apply -f -
+        kustomize build project/server/ | kubectl apply -f -
         kubectl rollout status deployment $SERVER_IMAGE
         kubectl get services -o wide
     - name: Deploy client
       run: |-
         kustomize edit set image gcr.io/PROJECT_ID/CLIENT_IMAGE=gcr.io/$PROJECT_ID/$CLIENT_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
-        kustomize build client/kustomization.yaml | kubectl apply -f -
+        kustomize build project/client/ | kubectl apply -f -
         kubectl rollout status deployment $CLIENT_IMAGE
         kubectl get services -o wide
