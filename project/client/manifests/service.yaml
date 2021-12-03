@@ -4,7 +4,7 @@ metadata:
   namespace: dwk-project
   name: project-client-svc
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: project-client
   ports:

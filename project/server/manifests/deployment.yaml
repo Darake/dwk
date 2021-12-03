@@ -13,6 +13,8 @@ spec:
       labels:
         app: project-server
     spec:
+      securityContext:
+        fsGroup: 2000
       volumes:
         - name: shared-files
           persistentVolumeClaim:

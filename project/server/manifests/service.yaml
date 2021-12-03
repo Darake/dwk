@@ -4,11 +4,10 @@ metadata:
   namespace: dwk-project
   name: project-server-svc
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: project-server
   ports:
     - port: 1234
       targetPort: 8090
       protocol: TCP
-      name: http
