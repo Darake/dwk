@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  namespace: dwk-project
   name: project-server-dep
 spec:
   replicas: 1
@@ -16,6 +15,7 @@ spec:
       securityContext:
         fsGroup: 2000
       affinity:
+        # So that on deployment update the new pod can attach to the persistentvolumeclaim.
         podAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
           - labelSelector:
