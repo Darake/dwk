@@ -39,14 +39,14 @@ spec:
             - secretRef:
                 name: project-secrets
           volumeMounts:
-            - name: data
+            - name: project-data
               mountPath: /var/lib/postgresql/data
-              subPath: postgres
+              subPath: project-pg
   volumeClaimTemplates:
     - metadata:
-        name: data
+        name: project-data
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 50Mi
+            storage: 100Mi
