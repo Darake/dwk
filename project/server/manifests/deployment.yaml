@@ -15,6 +15,16 @@ spec:
     spec:
       securityContext:
         fsGroup: 2000
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - project-server
+            topologyKey: "kubernetes.io/hostname"
       volumes:
         - name: shared-files
           persistentVolumeClaim:
