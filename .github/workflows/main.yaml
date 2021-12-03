@@ -34,7 +34,7 @@ jobs:
     - name: Build client
       run: |-
         docker build \
-          --tag "gcr.io/$PROJECT_ID/$IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+          --tag "gcr.io/$PROJECT_ID/$CLIENT_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
           project/client/
     - name: Publish server
       run: |-
