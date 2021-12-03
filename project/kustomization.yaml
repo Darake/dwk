@@ -5,6 +5,10 @@ resources:
 - server/manifests/service.yaml
 - client/manifests/deployment.yaml
 - client/manifests/service.yaml
+- manifests/cronjob.yaml
+- manifests/ingress.yaml
+- manifests/persistenvolumeclaim.yaml
+- manifests/statefulset.yaml
 images:
 - name: gcr.io/PROJECT_ID/CLIENT_IMAGE
   newName: daraku/project-client
