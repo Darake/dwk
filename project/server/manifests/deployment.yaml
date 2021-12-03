@@ -39,3 +39,7 @@ spec:
           volumeMounts:
             - name: shared-files
               mountPath: /files
+          resources:
+            limits:
+              cpu: "200m"
+              memory: "100Mi"
