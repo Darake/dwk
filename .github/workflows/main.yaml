@@ -1,0 +1,58 @@
+name: Release application
+
+on:
+  push:
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  GKE_CLUSTER: dwk-cluster
+  GKE_ZONE: europe-north1-b
+  SERVER_IMAGE: project-server
+  CLIENT_IMAGE: project-client
+
+jobs:
+  build-publish-deploy:
+    name: Build, Publish and Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@master
+      with:
+        project_id: ${{ secrets.GKE_PROJECT }}
+        service_account_key: ${{ secrets.GKE_SA_KEY }}
+        export_default_credentials: true
+    - run: gcloud --quiet auth configure-docker
+    - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+    - name: Build server
+      run: |-
+        docker build \
+          --tag "gcr.io/$PROJECT_ID/$SERVER_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+          project/server/Dockerfile
+    - name: Build client
+      run: |-
+        docker build \
+          --tag "gcr.io/$PROJECT_ID/$IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+          project/client/Dockerfile
+    - name: Publish server
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/$SERVER_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+    - name: Publish client
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/$CLIENT_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+    - name: Set up Kustomize
+      uses: imranismail/setup-kustomize@v1
+    - name: Deploy server
+      run: |-
+        kustomize edit set image gcr.io/PROJECT_ID/SERVER_IMAGE=gcr.io/$PROJECT_ID/$SERVER_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+        kustomize build server/kustomization.yaml | kubectl apply -f -
+        kubectl rollout status deployment $SERVER_IMAGE
+        kubectl get services -o wide
+    - name: Deploy client
+      run: |-
+        kustomize edit set image gcr.io/PROJECT_ID/CLIENT_IMAGE=gcr.io/$PROJECT_ID/$CLIENT_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+        kustomize build client/kustomization.yaml | kubectl apply -f -
+        kubectl rollout status deployment $CLIENT_IMAGE
+        kubectl get services -o wide

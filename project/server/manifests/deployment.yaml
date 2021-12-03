@@ -19,7 +19,7 @@ spec:
             claimName: shared-claim
       containers:
         - name: project-server
-          image: daraku/project-server:v1.19
+          image: gcr.io/PROJECT_ID/SERVER_IMAGE
           envFrom:
             - secretRef:
                 name: project-secrets
