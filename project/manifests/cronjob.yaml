@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  namespace: dwk-project
+  name: daily-todo-job
+spec:
+  schedule: "0 0 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: daily-todo-job
+            image: daraku/daily-todo-script:v1.0
+            env:
+            - name: POST_URL
+              value: project-server-svc:1234/api/todos
+          restartPolicy: Never
