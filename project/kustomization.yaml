@@ -3,8 +3,10 @@ kind: Kustomization
 resources:
 - server/manifests/deployment.yaml
 - server/manifests/service.yaml
+- server/manifests/horizontalpodautoscaler.yaml
 - client/manifests/deployment.yaml
 - client/manifests/service.yaml
+- client/manifests/horizontalpodautoscaler.yaml
 - manifests/cronjob.yaml
 - manifests/ingress.yaml
 - manifests/persistentvolumeclaim.yaml
