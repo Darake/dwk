@@ -48,11 +48,11 @@ jobs:
       run: |-
         (cd project/server && kustomize edit set image gcr.io/PROJECT_ID/SERVER_IMAGE=gcr.io/$PROJECT_ID/$SERVER_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA)
         kustomize build project/server/ | kubectl apply -f -
-        kubectl rollout status deployment $SERVER_IMAGE-dep
+        kubectl rollout status deployment $SERVER_IMAGE-dep -n dwk-project
         kubectl get services -o wide
     - name: Deploy client
       run: |-
         (cd project/client && kustomize edit set image gcr.io/PROJECT_ID/CLIENT_IMAGE=gcr.io/$PROJECT_ID/$CLIENT_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA)
         kustomize build project/client/ | kubectl apply -f -
-        kubectl rollout status deployment $CLIENT_IMAGE-dep
+        kubectl rollout status deployment $CLIENT_IMAGE-dep -n dwk-project
         kubectl get services -o wide
