@@ -133,7 +133,7 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 func initDB() {
 	url := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable",
 		"postgres",
-		os.Getenv("POSTGRES_PASSWORD"),
+		"wrong_password", //os.Getenv("POSTGRES_PASSWORD"),
 		"project-db-svc",
 		"5432",
 		"postgres")
