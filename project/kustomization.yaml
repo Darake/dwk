@@ -4,6 +4,7 @@ resources:
 - server/manifests/deployment.yaml
 - server/manifests/service.yaml
 - server/manifests/horizontalpodautoscaler.yaml
+- server/manifests/analysistemplate.yaml
 - client/manifests/deployment.yaml
 - client/manifests/service.yaml
 - client/manifests/horizontalpodautoscaler.yaml
