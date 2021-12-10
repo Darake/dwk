@@ -27,7 +27,7 @@ jobs:
     - run: gcloud --quiet auth configure-docker
     - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
     - name: Build & publish server
-    - uses: whoan/docker-build-with-cache-action@v5
+      uses: whoan/docker-build-with-cache-action@v5
       with:
         username: _json_key
         password: "${{ secrets.GCLOUD_JSON_KEY }}"
