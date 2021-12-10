@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ping-pong
-          image: daraku/ping-pong:v1.12
+          image: daraku/ping-pong:v1.22
           resources:
             limits:
               cpu: "50m"
@@ -23,3 +23,9 @@ spec:
           envFrom:
             - secretRef:
                 name: ping-pong-secrets
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+               path: /health
+               port: 5011
