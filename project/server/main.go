@@ -156,6 +156,12 @@ A:
 				continue
 			}
 
+			err = DB.Ping()
+			if err != nil {
+				fmt.Println("db ping failed")
+				continue
+			}
+
 			fmt.Println("db connection active")
 
 			fmt.Println("Checking and creating todos table")
