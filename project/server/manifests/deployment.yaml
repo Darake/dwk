@@ -15,21 +15,24 @@ spec:
     spec:
       securityContext:
         fsGroup: 2000
-      affinity:
+      #affinity:
         # So that on deployment update the new pod can attach to the persistentvolumeclaim.
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - project-server
-            topologyKey: "kubernetes.io/hostname"
+        # podAffinity:
+        #   requiredDuringSchedulingIgnoredDuringExecution:
+        #   - labelSelector:
+        #       matchExpressions:
+        #       - key: app
+        #         operator: In
+        #         values:
+        #         - project-server
+        #     topologyKey: "kubernetes.io/hostname"
+      # volumes:
+      #   - name: shared-files
+      #     persistentVolumeClaim:
+      #       claimName: shared-claim
       volumes:
-        - name: shared-files
-          persistentVolumeClaim:
-            claimName: shared-claim
+        - name: cache
+          emptyDir: {}
       containers:
         - name: project-server
           image: gcr.io/PROJECT_ID/SERVER_IMAGE
@@ -37,7 +40,7 @@ spec:
             - secretRef:
                 name: project-secrets
           volumeMounts:
-            - name: shared-files
+            - name: cache
               mountPath: /files
           resources:
             limits:
