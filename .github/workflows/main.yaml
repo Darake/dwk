@@ -26,15 +26,15 @@ jobs:
         export_default_credentials: true
     - run: gcloud --quiet auth configure-docker
     - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-    - name: Build & publish server
-      uses: whoan/docker-build-with-cache-action@v5
-      with:
-        username: _json_key
-        password: "${{ secrets.GCLOUD_JSON_KEY }}"
-        image_name: "gcr.io/$PROJECT_ID/$SERVER_IMAGE"
-        image_tag: "${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
-        registry: gcr.io
-        context: project/server/
+    # - name: Build & publish server
+    #   uses: whoan/docker-build-with-cache-action@v5
+    #   with:
+    #     username: _json_key
+    #     password: "${{ secrets.GCLOUD_JSON_KEY }}"
+    #     image_name: "gcr.io/$PROJECT_ID/$SERVER_IMAGE"
+    #     image_tag: "${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+    #     registry: gcr.io
+    #     context: project/server/
     - name: Build server
       run: |-
         docker build \
