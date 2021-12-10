@@ -43,3 +43,15 @@ spec:
             limits:
               cpu: "200m"
               memory: "100Mi"
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+               path: /health
+               port: 8090
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            httpGet:
+               path: /health
+               port: 8090

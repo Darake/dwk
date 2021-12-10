@@ -68,6 +68,12 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func todosHandler(w http.ResponseWriter, r *http.Request) {
+	if DB == nil {
+		log.Println("Database not ready")
+		w.WriteHeader(http.StatusServiceUnavailable)
+		return
+	}
+
 	switch r.Method {
 	case http.MethodGet:
 		rows, err := DB.Query("SELECT * FROM todos;")
@@ -110,6 +116,20 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+func healthHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Checking health")
+
+	err := DB.Ping()
+	if err != nil {
+		log.Println("Bad health")
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	log.Println("Good health")
+	w.WriteHeader(http.StatusOK)
+}
+
 func initDB() {
 	url := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable",
 		"postgres",
@@ -118,22 +138,41 @@ func initDB() {
 		"5432",
 		"postgres")
 
-	var err error
-	DB, err = sql.Open("postgres", url)
-	checkForError(err)
+	ticker := time.NewTicker(5 * time.Second)
+	defer ticker.Stop()
 
-	err = DB.Ping()
-	checkForError(err)
+	timeoutExceeded := time.After(5 * time.Minute)
+A:
+	for {
+		select {
+		case <-timeoutExceeded:
+			fmt.Println("db connection failed after 5min timeout")
+			break A
+		case <-ticker.C:
+			var err error
+			DB, err = sql.Open("postgres", url)
+			if err != nil {
+				fmt.Println("db connection failed")
+				continue
+			}
 
-	_, err = DB.Exec("CREATE TABLE IF NOT EXISTS todos (description VARCHAR(140) NOT NULL);")
-	checkForError(err)
+			fmt.Println("db connection active")
+
+			fmt.Println("Checking and creating todos table")
+			_, err = DB.Exec("CREATE TABLE IF NOT EXISTS todos (description VARCHAR(140) NOT NULL);")
+			checkForError(err)
+
+			break A
+		}
+	}
 }
 
 func main() {
-	initDB()
+	go initDB()
 
 	http.HandleFunc("/api/daily-image", imageHandler)
 	http.HandleFunc("/api/todos", todosHandler)
+	http.HandleFunc("/health", healthHandler)
 	http.HandleFunc("/", defaultHandler)
 
 	port := "8090"
