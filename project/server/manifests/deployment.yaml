@@ -21,7 +21,7 @@ spec:
       steps:
         - setWeight: 50
         - pause:
-            duration: 5min
+            duration: 5m
   template:
     metadata:
       labels:
