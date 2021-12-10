@@ -31,8 +31,8 @@ jobs:
       with:
         username: _json_key
         password: "${{ secrets.GCLOUD_JSON_KEY }}"
-        image_name: gcr.io/$PROJECT_ID/$SERVER_IMAGE
-        image_tag: ${GITHUB_REF#refs/heads/}-$GITHUB_SHA
+        image_name: "gcr.io/$PROJECT_ID/$SERVER_IMAGE"
+        image_tag: "${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
         registry: gcr.io
         context: project/server/
     - name: Build server
