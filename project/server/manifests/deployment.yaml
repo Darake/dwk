@@ -43,7 +43,7 @@ spec:
                 name: project-secrets
           volumeMounts:
             - name: cache
-              mountPath: /project-server/files
+              mountPath: /files
           resources:
             limits:
               cpu: "200m"

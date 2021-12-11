@@ -16,7 +16,7 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const imagePath = "files/image.jpg"
+const imagePath = "/files/image.jpg"
 const imageUrl = "https://picsum.photos/1200"
 
 var DB *sql.DB
