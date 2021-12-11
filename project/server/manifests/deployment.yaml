@@ -35,12 +35,15 @@ spec:
       containers:
         - name: project-server
           image: gcr.io/PROJECT_ID/SERVER_IMAGE
+          env:
+            - name: POSTGRES_URL
+              value: "project-db-svc"
           envFrom:
             - secretRef:
                 name: project-secrets
           volumeMounts:
             - name: cache
-              mountPath: /files
+              mountPath: project-server/files
           resources:
             limits:
               cpu: "200m"

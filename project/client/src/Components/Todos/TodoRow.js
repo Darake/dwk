@@ -1,4 +1,4 @@
-import { ListItem, CloseButton } from "@chakra-ui/react"
+import { CloseButton, HStack, Text } from "@chakra-ui/react"
 import axios from "axios"
 import { useMutation, useQueryClient } from "react-query"
 
@@ -8,7 +8,7 @@ const TodoRow = ({ todo }) => {
     const todoMutation = useMutation(() => axios.put(`api/todos/${todo.id}`))
 
     const handleTodoCompletion = () => {
-        todoMutation.mutate({
+        todoMutation.mutate('todos', {
             onSuccess: () => {
                 queryClient.invalidateQueries(['todos'])
             }
@@ -16,10 +16,10 @@ const TodoRow = ({ todo }) => {
     }
 
     return (
-        <ListItem>
+        <HStack align="flex-start">
             <CloseButton size='sm' onClick={handleTodoCompletion}/>
-            {todo.description}
-        </ListItem>
+            <Text>{todo.description}</Text>
+        </HStack>
     )
 }
 

@@ -16,15 +16,14 @@ import (
 	_ "github.com/lib/pq"
 )
 
-const imagePath = "/files/image.jpg"
+const imagePath = "files/image.jpg"
 const imageUrl = "https://picsum.photos/1200"
 
 var DB *sql.DB
 
 type Todo struct {
-	id          int
-	description string
-	completed   bool
+	Id          int    `json:"id"`
+	Description string `json:"description"`
 }
 
 func checkForError(err error) {
@@ -57,7 +56,7 @@ func getImageFromCache(w http.ResponseWriter) *os.File {
 	return img
 }
 
-func imageHandler(w http.ResponseWriter, r *http.Request) {
+func imageHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	imageInfo, err := os.Stat(imagePath)
 
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
@@ -74,20 +73,20 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, img)
 }
 
-func getTodos(w http.ResponseWriter, r *http.Request) {
+func getTodos(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if DB == nil {
 		log.Println("Database not ready")
 		w.WriteHeader(http.StatusServiceUnavailable)
 		return
 	}
 
-	rows, err := DB.Query("SELECT * FROM todos WHERE completed = 'false';")
+	rows, err := DB.Query("SELECT id, description FROM todos WHERE completed = 'false';")
 	checkForError(err)
 
 	var todos []Todo
-	var todo Todo
 	for rows.Next() {
-		err := rows.Scan(&todo)
+		var todo Todo
+		err := rows.Scan(&todo.Id, &todo.Description)
 		checkForError(err)
 
 		todos = append(todos, todo)
@@ -97,7 +96,7 @@ func getTodos(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(todos)
 }
 
-func newTodo(w http.ResponseWriter, r *http.Request) {
+func newTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if DB == nil {
 		log.Println("Database not ready")
 		w.WriteHeader(http.StatusServiceUnavailable)
@@ -129,9 +128,10 @@ func markTodoDone(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 	DB.Exec("UPDATE todos SET completed = 'true' WHERE id = $1 ;", todoId)
 
 	log.Printf("Todo %s completed", todoId)
+	w.WriteHeader(http.StatusOK)
 }
 
-func defaultHandler(w http.ResponseWriter, r *http.Request) {
+func defaultHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
 		return
@@ -140,7 +140,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-func healthHandler(w http.ResponseWriter, r *http.Request) {
+func healthHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	fmt.Println("Checking health")
 
 	err := DB.Ping()
@@ -158,7 +158,7 @@ func initDB() {
 	url := fmt.Sprintf("postgres://%v:%v@%v:%v/%v?sslmode=disable",
 		"postgres",
 		os.Getenv("POSTGRES_PASSWORD"),
-		"project-db-svc",
+		os.Getenv("POSTGRES_URL"),
 		"5432",
 		"postgres")
 
