@@ -12,6 +12,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
 )
 
@@ -19,6 +20,12 @@ const imagePath = "/files/image.jpg"
 const imageUrl = "https://picsum.photos/1200"
 
 var DB *sql.DB
+
+type Todo struct {
+	id          int
+	description string
+	completed   bool
+}
 
 func checkForError(err error) {
 	if err != nil {
@@ -67,44 +74,61 @@ func imageHandler(w http.ResponseWriter, r *http.Request) {
 	io.Copy(w, img)
 }
 
-func todosHandler(w http.ResponseWriter, r *http.Request) {
+func getTodos(w http.ResponseWriter, r *http.Request) {
 	if DB == nil {
 		log.Println("Database not ready")
 		w.WriteHeader(http.StatusServiceUnavailable)
 		return
 	}
 
-	switch r.Method {
-	case http.MethodGet:
-		rows, err := DB.Query("SELECT * FROM todos;")
+	rows, err := DB.Query("SELECT * FROM todos WHERE completed = 'false';")
+	checkForError(err)
+
+	var todos []Todo
+	var todo Todo
+	for rows.Next() {
+		err := rows.Scan(&todo)
 		checkForError(err)
 
-		var todos []string
-		var todo string
-		for rows.Next() {
-			err := rows.Scan(&todo)
-			checkForError(err)
-
-			todos = append(todos, todo)
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(todos)
-	case http.MethodPost:
-		data, _ := ioutil.ReadAll(r.Body)
-		newTodo := string(data)
-
-		if len(newTodo) > 140 {
-			log.Println("Too long todo provided: " + newTodo)
-			http.Error(w, "Provided todo length is too long (140 charactes max)", http.StatusBadRequest)
-			return
-		}
-
-		DB.Exec("INSERT INTO todos (description) VALUES ($1)", newTodo)
-		log.Println("Inserted: " + newTodo)
-	default:
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		todos = append(todos, todo)
 	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(todos)
+}
+
+func newTodo(w http.ResponseWriter, r *http.Request) {
+	if DB == nil {
+		log.Println("Database not ready")
+		w.WriteHeader(http.StatusServiceUnavailable)
+		return
+	}
+
+	data, _ := ioutil.ReadAll(r.Body)
+	newTodo := string(data)
+
+	if len(newTodo) > 140 {
+		log.Println("Too long todo provided: " + newTodo)
+		http.Error(w, "Provided todo length is too long (140 charactes max)", http.StatusBadRequest)
+		return
+	}
+
+	DB.Exec("INSERT INTO todos (description) VALUES ($1)", newTodo)
+	log.Println("Inserted: " + newTodo)
+}
+
+func markTodoDone(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	if DB == nil {
+		log.Println("Database not ready")
+		w.WriteHeader(http.StatusServiceUnavailable)
+		return
+	}
+
+	todoId := ps.ByName("id")
+
+	DB.Exec("UPDATE todos SET completed = 'true' WHERE id = $1 ;", todoId)
+
+	log.Printf("Todo %s completed", todoId)
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
@@ -165,7 +189,7 @@ A:
 			fmt.Println("db connection active")
 
 			fmt.Println("Checking and creating todos table")
-			_, err = DB.Exec("CREATE TABLE IF NOT EXISTS todos (description VARCHAR(140) NOT NULL);")
+			_, err = DB.Exec("CREATE TABLE IF NOT EXISTS todos (id serial PRIMARY KEY, description VARCHAR(140) NOT NULL, completed boolean DEFAULT 'false');")
 			checkForError(err)
 
 			break A
@@ -176,12 +200,16 @@ A:
 func main() {
 	go initDB()
 
-	http.HandleFunc("/api/daily-image", imageHandler)
-	http.HandleFunc("/api/todos", todosHandler)
-	http.HandleFunc("/health", healthHandler)
-	http.HandleFunc("/", defaultHandler)
+	router := httprouter.New()
+	router.GET("/api/todos", getTodos)
+	router.POST("/api/todos", newTodo)
+	router.PUT("/api/todos/:id", markTodoDone)
+
+	router.GET("/api/daily-image", imageHandler)
+	router.GET("/health", healthHandler)
+	router.GET("/", defaultHandler)
 
 	port := "8090"
 	log.Printf("Server starting in port %s", port)
-	http.ListenAndServe(":"+port, nil)
+	http.ListenAndServe(":"+port, router)
 }

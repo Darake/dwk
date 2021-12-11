@@ -1,6 +1,7 @@
-import { UnorderedList, ListItem } from "@chakra-ui/react"
+import { UnorderedList } from "@chakra-ui/react"
 import axios from "axios"
 import { useQuery } from "react-query"
+import TodoRow from "./TodoRow"
 
 const TodoList = () => {
     const fetchTodos = async () => {
@@ -12,7 +13,7 @@ const TodoList = () => {
 
     return (
         <UnorderedList>
-            {data?.map(todo => <ListItem>{todo}</ListItem>)}
+            {data?.map(todo => <TodoRow todo={todo} />)}
         </UnorderedList>
     )
 }
