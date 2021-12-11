@@ -4,8 +4,8 @@ metadata:
   name: project-server-hpa
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
+    apiVersion: argoproj.io/v1alpha1
+    kind: Rollout
     name: project-server-dep
   minReplicas: 2
   maxReplicas: 3
