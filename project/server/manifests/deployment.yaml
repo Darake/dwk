@@ -19,9 +19,10 @@ spec:
             fieldRef:
               fieldPath: metadata.namespace
       steps:
-        - setWeight: 50
-        - pause:
-            duration: 5m
+        - setWeight: 30
+        - pause: { duration: 5m }
+        - setWeight: 60
+        - pause: { duration: 5m }
   template:
     metadata:
       labels:

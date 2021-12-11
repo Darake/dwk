@@ -9,7 +9,6 @@ spec:
   - name: cpu-rate
     initialDelay: 1m
     interval: 1m
-    count: 10
     successCondition: result < 0.1
     provider:
       prometheus:
