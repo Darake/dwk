@@ -6,7 +6,6 @@ resources:
 - server/manifests/deployment.yaml
 - server/manifests/service.yaml
 - server/manifests/horizontalpodautoscaler.yaml
-- server/manifests/analysistemplate.yaml
 - client/manifests/deployment.yaml
 - client/manifests/service.yaml
 - client/manifests/horizontalpodautoscaler.yaml
@@ -14,6 +13,7 @@ resources:
 - manifests/ingress.yaml
 - manifests/persistentvolumeclaim.yaml
 - manifests/statefulset.yaml
+- manifests/analysistemplate.yaml
 images:
 - name: gcr.io/PROJECT_ID/CLIENT_IMAGE
   newName: daraku/project-client

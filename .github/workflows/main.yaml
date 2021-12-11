@@ -65,5 +65,4 @@ jobs:
         kustomize edit set image gcr.io/PROJECT_ID/CLIENT_IMAGE=gcr.io/$PROJECT_ID/$CLIENT_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA && \
         kustomize edit set image gcr.io/PROJECT_ID/SERVER_IMAGE=gcr.io/$PROJECT_ID/$SERVER_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA)
         kustomize build project/ | kubectl apply -f -
-        kubectl rollout status deployment $CLIENT_IMAGE-dep -n ${GITHUB_REF#refs/heads/}
         kubectl get services -o wide

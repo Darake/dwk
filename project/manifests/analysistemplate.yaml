@@ -10,7 +10,7 @@ spec:
     initialDelay: 1m
     interval: 1m
     count: 10
-    successCondition: result < 0.0001
+    successCondition: result < 0.1
     provider:
       prometheus:
         address: http://kube-prometheus-stack-1639-prometheus.prometheus.svc.cluster.local:9090
