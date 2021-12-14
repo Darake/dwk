@@ -46,12 +46,20 @@ jobs:
         docker build \
           --tag "gcr.io/$PROJECT_ID/$CLIENT_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
           project/client/
+    - name: Build nats
+      run: |-
+        docker build \
+          --tag "gcr.io/$PROJECT_ID/$NATS_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA" \
+          project/nats/
     - name: Publish server
       run: |-
         docker push "gcr.io/$PROJECT_ID/$SERVER_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
     - name: Publish client
       run: |-
         docker push "gcr.io/$PROJECT_ID/$CLIENT_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
+    - name: Publish nats
+      run: |-
+        docker push "gcr.io/$PROJECT_ID/$NATS_IMAGE:${GITHUB_REF#refs/heads/}-$GITHUB_SHA"
     - name: Set up Kustomize
       uses: imranismail/setup-kustomize@v1
     - name: Deploy
