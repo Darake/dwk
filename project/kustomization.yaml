@@ -9,6 +9,7 @@ resources:
 - client/manifests/deployment.yaml
 - client/manifests/service.yaml
 - client/manifests/horizontalpodautoscaler.yaml
+- nats/manifests/deployment.yaml
 - manifests/cronjob.yaml
 - manifests/ingress.yaml
 - manifests/persistentvolumeclaim.yaml
@@ -19,3 +20,5 @@ images:
   newName: daraku/project-client
 - name: gcr.io/PROJECT_ID/SERVER_IMAGE
   newName: daraku/project-server
+- name: gcr.io/PROJECT_ID/NATS_IMAGE
+  newName: darak/project-nats

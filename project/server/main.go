@@ -14,16 +14,30 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	_ "github.com/lib/pq"
+	nats "github.com/nats-io/nats.go"
 )
 
-const imagePath = "/files/image.jpg"
+const imagePath = "image.jpg"
 const imageUrl = "https://picsum.photos/1200"
 
 var DB *sql.DB
+var NC *nats.Conn
 
 type Todo struct {
 	Id          int    `json:"id"`
 	Description string `json:"description"`
+}
+
+type NatsMessage struct {
+	User    string `json:"user"`
+	Message string `json:"message"`
+}
+
+func sendNatsMessage(message string) {
+	err := NC.Publish("todo", []byte(message))
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func checkForError(err error) {
@@ -114,6 +128,8 @@ func newTodo(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	DB.Exec("INSERT INTO todos (description) VALUES ($1)", newTodo)
 	log.Println("Inserted: " + newTodo)
+
+	sendNatsMessage("New todo created: " + newTodo)
 }
 
 func markTodoDone(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
@@ -129,6 +145,8 @@ func markTodoDone(w http.ResponseWriter, r *http.Request, ps httprouter.Params) 
 
 	log.Printf("Todo %s completed", todoId)
 	w.WriteHeader(http.StatusOK)
+
+	sendNatsMessage("Todo with id " + todoId + " marked done.")
 }
 
 func defaultHandler(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
@@ -197,8 +215,17 @@ A:
 	}
 }
 
+func initNATS() {
+	var err error
+	NC, err = nats.Connect(os.Getenv("NATS_URL"))
+	if err != nil {
+		log.Println(err)
+	}
+}
+
 func main() {
 	go initDB()
+	go initNATS()
 
 	router := httprouter.New()
 	router.GET("/api/todos", getTodos)
