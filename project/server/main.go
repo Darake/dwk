@@ -17,7 +17,7 @@ import (
 	nats "github.com/nats-io/nats.go"
 )
 
-const imagePath = "image.jpg"
+const imagePath = "/files/image.jpg"
 const imageUrl = "https://picsum.photos/1200"
 
 var DB *sql.DB
