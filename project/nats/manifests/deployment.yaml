@@ -18,7 +18,7 @@ spec:
           image: gcr.io/PROJECT_ID/NATS_IMAGE
           env:
             - name: NATS_URL
-              value: nats://my-nats:4222
+              value: nats://my-nats.dwk-project.svc.cluster.local:4222
           envFrom:
             - secretRef:
                 name: project-secrets

@@ -39,6 +39,8 @@ spec:
           env:
             - name: POSTGRES_URL
               value: "project-db-svc"
+            - name: NATS_URL
+              value: nats://my-nats.dwk-project.svc.cluster.local:4222
           envFrom:
             - secretRef:
                 name: project-secrets
