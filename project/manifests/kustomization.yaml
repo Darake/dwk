@@ -12,7 +12,6 @@ resources:
 - ../nats/manifests/deployment.yaml
 - cronjob.yaml
 - ingress.yaml
-- persistentvolumeclaim.yaml
 - statefulset.yaml
 - analysistemplate.yaml
 images:
