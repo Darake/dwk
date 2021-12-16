@@ -62,9 +62,9 @@ jobs:
     - name: Update yamls
       working-directory: project/manifests
       run: |-
-        kustomize edit set image gcr.io/PROJECT_ID/NATS_IMAGE=gcr.io/${{ $PROJECT_ID }}/project-nats:${{ github.sha }} && \
-        kustomize edit set image gcr.io/PROJECT_ID/SERER_IMAGE=gcr.io/${{ $PROJECT_ID }}/project-server:${{ github.sha }} && \
-        kustomize edit set image gcr.io/PROJECT_ID/CLIENT_IMAGE=gcr.io/${{ $PROJECT_ID }}/project-client:${{ github.sha }}
+        kustomize edit set image gcr.io/PROJECT_ID/NATS_IMAGE=gcr.io/$PROJECT_ID/project-nats:${{ github.sha }} && \
+        kustomize edit set image gcr.io/PROJECT_ID/SERER_IMAGE=gcr.io/$PROJECT_ID/project-server:${{ github.sha }} && \
+        kustomize edit set image gcr.io/PROJECT_ID/CLIENT_IMAGE=gcr.io/$PROJECT_ID/project-client:${{ github.sha }}
 
     # Commit and push
     - uses: EndBug/add-and-commit@v7
