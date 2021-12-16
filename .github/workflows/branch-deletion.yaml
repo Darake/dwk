@@ -1,25 +1,26 @@
-name: Delete environment
+# DEPRECATED
+# name: Delete environment
 
-on: delete
+# on: delete
 
-env:
-  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GKE_CLUSTER: dwk-cluster
-  GKE_ZONE: europe-north1-b
+# env:
+#   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+#   GKE_CLUSTER: dwk-cluster
+#   GKE_ZONE: europe-north1-b
 
-jobs:
-  delete-environment:
-    if: github.event.ref_type == 'branch'
-    name: Delete GKE namespace
-    runs-on: ubuntu-latest
+# jobs:
+#   delete-environment:
+#     if: github.event.ref_type == 'branch'
+#     name: Delete GKE namespace
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@master
-        with:
-          project_id: ${{ secrets.GKE_PROJECT }}
-          service_account_key: ${{ secrets.GKE_SA_KEY }}
-          export_default_credentials: true
-      - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
-      - name: Delete namespace
-        run: kubectl delete namespace ${{ github.event.ref }}
+#     steps:
+#       - name: Set up Cloud SDK
+#         uses: google-github-actions/setup-gcloud@master
+#         with:
+#           project_id: ${{ secrets.GKE_PROJECT }}
+#           service_account_key: ${{ secrets.GKE_SA_KEY }}
+#           export_default_credentials: true
+#       - run: gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+#       - name: Delete namespace
+#         run: kubectl delete namespace ${{ github.event.ref }}
