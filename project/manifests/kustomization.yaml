@@ -1,7 +1,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 configurations:
-  - https://argoproj.github.io/argo-rollouts/features/kustomize/rollout-transform.yaml
+- https://argoproj.github.io/argo-rollouts/features/kustomize/rollout-transform.yaml
 resources:
 - ../server/manifests/deployment.yaml
 - ../server/manifests/service.yaml
@@ -17,10 +17,13 @@ resources:
 images:
 - name: gcr.io/PROJECT_ID/CLIENT_IMAGE
   newName: gcr.io/main-nucleus-333615/project-client
-  newTag: part-4-30448f459c94626ba2281592fa9796f1b44c8e37
-- name: gcr.io/PROJECT_ID/SERVER_IMAGE
-  newName: gcr.io/main-nucleus-333615/project-server
-  newTag: part-4-30448f459c94626ba2281592fa9796f1b44c8e37
+  newTag: fbbe97eb4c772dadf453d326d3703f38273cc6bb
 - name: gcr.io/PROJECT_ID/NATS_IMAGE
   newName: gcr.io/main-nucleus-333615/project-nats
+  newTag: fbbe97eb4c772dadf453d326d3703f38273cc6bb
+- name: gcr.io/PROJECT_ID/SERER_IMAGE
+  newName: gcr.io/main-nucleus-333615/project-server
+  newTag: fbbe97eb4c772dadf453d326d3703f38273cc6bb
+- name: gcr.io/PROJECT_ID/SERVER_IMAGE
+  newName: gcr.io/main-nucleus-333615/project-server
   newTag: part-4-30448f459c94626ba2281592fa9796f1b44c8e37
