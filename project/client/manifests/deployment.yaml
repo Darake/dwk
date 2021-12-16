@@ -24,6 +24,8 @@ spec:
             duration: 5m
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: project-client
     spec:

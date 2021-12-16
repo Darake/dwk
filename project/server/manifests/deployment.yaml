@@ -25,6 +25,8 @@ spec:
         - pause: { duration: 5m }
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: enabled
       labels:
         app: project-server
     spec:
