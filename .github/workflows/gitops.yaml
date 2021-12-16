@@ -30,21 +30,21 @@ jobs:
       with:
         context: project/nats
         push: true
-        tags: gcr.io/$PROJECT_ID/project-nats:${{ github.sha }}
+        tags: gcr.io/${{ secrets.GKE_PROJECT }}/project-nats:${{ github.sha }}
 
     - name: Build and Push server
       uses: docker/build-push-action@v2
       with:
         context: project/server
         push: true
-        tags: gcr.io/$PROJECT_ID/project-server:${{ github.sha }}
+        tags: gcr.io/${{ secrets.GKE_PROJECT }}/project-server:${{ github.sha }}
     
     - name: Build and Push client
       uses: docker/build-push-action@v2
       with:
         context: project/client
         push: true
-        tags: gcr.io/$PROJECT_ID/project-client:${{ github.sha }}
+        tags: gcr.io/${{ secrets.GKE_PROJECT }}/project-client:${{ github.sha }}
 
   deploy:
     name: Deploy
@@ -62,9 +62,9 @@ jobs:
     - name: Update yamls
       working-directory: project/manifests
       run: |-
-        kustomize edit set image gcr.io/PROJECT_ID/NATS_IMAGE=gcr.io/$PROJECT_ID/project-nats:${{ github.sha }} && \
-        kustomize edit set image gcr.io/PROJECT_ID/SERER_IMAGE=gcr.io/$PROJECT_ID/project-server:${{ github.sha }} && \
-        kustomize edit set image gcr.io/PROJECT_ID/CLIENT_IMAGE=gcr.io/$PROJECT_ID/project-client:${{ github.sha }}
+        kustomize edit set image gcr.io/PROJECT_ID/NATS_IMAGE=gcr.io/${{ secrets.GKE_PROJECT }}/project-nats:${{ github.sha }} && \
+        kustomize edit set image gcr.io/PROJECT_ID/SERER_IMAGE=gcr.io/${{ secrets.GKE_PROJECT }}/project-server:${{ github.sha }} && \
+        kustomize edit set image gcr.io/PROJECT_ID/CLIENT_IMAGE=gcr.io/${{ secrets.GKE_PROJECT }}/project-client:${{ github.sha }}
 
     # Commit and push
     - uses: EndBug/add-and-commit@v7
