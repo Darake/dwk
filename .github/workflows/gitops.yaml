@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - 'project/**'
-      - '.github/workflows/gitops.yml'
+      - '.github/workflows/gitops.yaml'
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
