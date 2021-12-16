@@ -30,21 +30,21 @@ jobs:
       with:
         context: project/nats
         push: true
-        tags: "gcr.io/$PROJECT_ID/project-nats:$GITHUB_SHA"
+        tags: gcr.io/$PROJECT_ID/project-nats:$GITHUB_SHA
 
     - name: Build and Push server
       uses: docker/build-push-action@v2
       with:
         context: project/server
         push: true
-        tags: "gcr.io/$PROJECT_ID/project-server:$GITHUB_SHA"
+        tags: gcr.io/$PROJECT_ID/project-server:$GITHUB_SHA
     
     - name: Build and Push client
       uses: docker/build-push-action@v2
       with:
         context: project/client
         push: true
-        tags: "gcr.io/$PROJECT_ID/project-client:$GITHUB_SHA"
+        tags: gcr.io/$PROJECT_ID/project-client:$GITHUB_SHA
 
   deploy:
     name: Deploy
