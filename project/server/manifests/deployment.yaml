@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   namespace: dwk-project
   name: project-server-dep
@@ -8,6 +8,21 @@ spec:
   selector:
     matchLabels:
       app: project-server
+  strategy:
+    canary:
+      analysis:
+        templates:
+        - templateName: cpu-rate
+        args:
+        - name: current-namespace
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      steps:
+        - setWeight: 30
+        - pause: { duration: 5m }
+        - setWeight: 60
+        - pause: { duration: 5m }
   template:
     metadata:
       labels:
@@ -15,31 +30,36 @@ spec:
     spec:
       securityContext:
         fsGroup: 2000
-      affinity:
-        # So that on deployment update the new pod can attach to the persistentvolumeclaim.
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - project-server
-            topologyKey: "kubernetes.io/hostname"
       volumes:
-        - name: shared-files
-          persistentVolumeClaim:
-            claimName: shared-claim
+        - name: cache
+          emptyDir: {}
       containers:
         - name: project-server
           image: gcr.io/PROJECT_ID/SERVER_IMAGE
+          env:
+            - name: POSTGRES_URL
+              value: "project-db-svc"
+            - name: NATS_URL
+              value: nats://my-nats.dwk-project.svc.cluster.local:4222
           envFrom:
             - secretRef:
                 name: project-secrets
           volumeMounts:
-            - name: shared-files
+            - name: cache
               mountPath: /files
           resources:
             limits:
               cpu: "200m"
               memory: "100Mi"
+          readinessProbe:
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            httpGet:
+               path: /health
+               port: 8090
+          livenessProbe:
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            httpGet:
+               path: /health
+               port: 8090

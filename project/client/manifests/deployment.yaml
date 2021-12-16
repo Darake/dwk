@@ -1,5 +1,5 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   namespace: dwk-project
   name: project-client-dep
@@ -8,6 +8,20 @@ spec:
   selector:
     matchLabels:
       app: project-client
+  strategy:
+    canary:
+      analysis:
+        templates:
+        - templateName: cpu-rate
+        args:
+        - name: current-namespace
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+      steps:
+        - setWeight: 50
+        - pause:
+            duration: 5m
   template:
     metadata:
       labels:

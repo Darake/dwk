@@ -1,6 +1,7 @@
-import { UnorderedList, ListItem } from "@chakra-ui/react"
+import { VStack } from "@chakra-ui/react"
 import axios from "axios"
 import { useQuery } from "react-query"
+import TodoRow from "./TodoRow"
 
 const TodoList = () => {
     const fetchTodos = async () => {
@@ -11,9 +12,9 @@ const TodoList = () => {
     const { data } = useQuery("todos", fetchTodos)
 
     return (
-        <UnorderedList>
-            {data?.map(todo => <ListItem>{todo}</ListItem>)}
-        </UnorderedList>
+        <VStack align="flex-start">
+            {data?.map(todo => <TodoRow key={todo.id} todo={todo} />)}
+        </VStack>
     )
 }
 
