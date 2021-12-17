@@ -17,13 +17,13 @@ resources:
 images:
 - name: gcr.io/PROJECT_ID/CLIENT_IMAGE
   newName: gcr.io/main-nucleus-333615/project-client
-  newTag: fbbe97eb4c772dadf453d326d3703f38273cc6bb
+  newTag: 118c2b9993f2566ba9da0b0bc820ae3b1959274c
 - name: gcr.io/PROJECT_ID/NATS_IMAGE
   newName: gcr.io/main-nucleus-333615/project-nats
-  newTag: fbbe97eb4c772dadf453d326d3703f38273cc6bb
+  newTag: 118c2b9993f2566ba9da0b0bc820ae3b1959274c
 - name: gcr.io/PROJECT_ID/SERER_IMAGE
   newName: gcr.io/main-nucleus-333615/project-server
-  newTag: fbbe97eb4c772dadf453d326d3703f38273cc6bb
+  newTag: 118c2b9993f2566ba9da0b0bc820ae3b1959274c
 - name: gcr.io/PROJECT_ID/SERVER_IMAGE
   newName: gcr.io/main-nucleus-333615/project-server
   newTag: part-4-30448f459c94626ba2281592fa9796f1b44c8e37
