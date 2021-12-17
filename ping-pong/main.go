@@ -123,7 +123,7 @@ func main() {
 	http.HandleFunc("/pingpong/count", countHandler)
 	http.HandleFunc("/pingpong", pongHandler)
 	http.HandleFunc("/health", healthHandler)
-	http.HandleFunc("/", defaultHandler)
+	http.HandleFunc("/", pongHandler)
 
-	http.ListenAndServe(":5011", nil)
+	http.ListenAndServe(":"+os.Getenv("PONG_PORT"), nil)
 }

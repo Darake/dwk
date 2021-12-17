@@ -25,7 +25,7 @@ WORKDIR /
 
 COPY --from=build /ping-pong /ping-pong
 
-EXPOSE 5011
+EXPOSE 8080
 
 USER nonroot:nonroot
 
