@@ -40,4 +40,14 @@
 * AWS: Outside of the course
 * Google Cloud: Used throughout part 3 to deploy our deployment, images etc
 * Heroku: Outside of the course
-* Prometheus: 
+* Prometheus: Used for monitoring and querying the system throughout the course.
+* Datadog: Outside of the course
+* Grafana: Used for monitoring our system
+* Sentry: Outside of the course
+* elasitc: Outside of the course
+* Grafana loki: Used for getting logs to show up in grafana
+* graylog: Outside of the course
+* Docker Hub: Used for storing and fetching container images used in the course
+* GitHub: this
+* git: Used for version control
+* knative: Used for implementing a serverless version for ping-pong application
