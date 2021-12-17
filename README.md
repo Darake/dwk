@@ -13,3 +13,31 @@
 * No vendor lock
 * Less opinionated
 * Cluster importing
+
+## Landscape
+![Alt text](/landscape.png?raw=true)
+### Usages
+* Microsoft SQL Server: Outside of the course
+* mongoDB: Outside of the course
+* PostgreSQL: Used as the chosen database for appliations.
+* redis: Outside of the course
+* snowflake: Outside of the course
+* NATS: Used to create a message que system for sending messages to an URL on todo creation/update.
+* HELM: Used to install several resources to cluster
+* argo: Used to implement canary release rollout
+* flux: Used for GitOps implementation
+* circleCI: Outside of the course
+* Github Actions: Used implement automatic deployment and environment creation
+* Gitlab: Outside of the course
+* Travis CI: Outside of the course
+* kubernetes: I meaaaaan..
+* contour: Used for proxyng when setting up a serverless version for ping-pong app
+* traefic: Used for proxyng at least in k3d througout the course.
+* Linkerd: Used for implementing a service mesh in our project
+* Google Persistent Disk: Used for our postgres data and other persistent storage in google cloud
+* Amazon ECR: Outside of the course
+* Google Container Registry: Used to store our docker images starting from part 3
+* AWS: Outside of the course
+* Google Cloud: Used throughout part 3 to deploy our deployment, images etc
+* Heroku: Outside of the course
+* Prometheus: 
